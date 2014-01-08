@@ -66,7 +66,7 @@ public class PlayArea {
         if(m_playerMove != Vector2i.ZERO && m_timeSinceMove >= m_moveFrequency){
             for(Block block : m_blocks){
                 if(block.getDirection() == Block.Direction.Player)
-                    block.move(m_playerMove);
+                    block.move(m_playerMove, m_blocks);
             }
             m_playerMove = Vector2i.ZERO;
             m_timeSinceMove = 0.0f;
@@ -75,7 +75,7 @@ public class PlayArea {
         // only update if a "tick" has passed
         if(m_timeSinceTick >= m_tickFrequency){
             for(Block block : m_blocks)
-                block.update();
+                block.update(m_blocks);
             
             m_timeSinceTick = 0.0f;
         }

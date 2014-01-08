@@ -116,14 +116,29 @@ public class BlockStructure {
         
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
-                if(structure[x][y] == 1)
-                    blocks.add(new Block(pos.x + x, pos.y +y, color, dir));
-
+                if(structure[x][y] == 1){
+                    Block tmp = new Block(pos.x + x, pos.y + y, color, dir);
+                    tmp.setAsPartAsStruct(nextStructId);
+                    blocks.add(tmp);
+                }       
+        
+        nextStructId++;
+        return blocks;
+    }
+    
+    public static List<Block> structBecamePlayer(List<Block> blocks, int structId){
+        for(Block struct: blocks){
+            if(struct.getStructId() == structId)
+                struct.setAsPartOfPlayer();
+        }
+        
         return blocks;
     }
 
     public enum Type{
         O, S, Z, L, J, I;
     }
+    
+    private static int nextStructId = 1;
 
 }
