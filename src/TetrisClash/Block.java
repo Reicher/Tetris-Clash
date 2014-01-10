@@ -20,9 +20,9 @@ public class Block {
     public Block( int x, int y ){
         m_gridPos = new Vector2i(x, y);
      
-        m_color = new Color( (int)(Math.random() * 255.0f), 
-                                (int)(Math.random() * 255.0f), 
-                                (int)(Math.random() * 255.0f), 
+        m_color = new Color( (int)(Math.random() * 155.0f + 100), 
+                             (int)(Math.random() * 155.0f + 100), 
+                             (int)(Math.random() * 155.0f + 100), 
                                 200);
         init();
     }
@@ -37,9 +37,9 @@ public class Block {
     public void init(){
         m_shape = new RectangleShape(new Vector2f(Size, Size));
         m_shape.setPosition(Vector2f.mul(new Vector2f(m_gridPos.x, m_gridPos.y), Size));
-        m_shape.setOutlineThickness(-Size/5.0f);
+        m_shape.setOutlineThickness(-Size/10.0f);
 
-        Color OutLine = new Color( m_color.r, m_color.g, m_color.b, 255);
+        Color OutLine = Color.BLACK;
         
         m_shape.setFillColor(m_color);
         m_shape.setOutlineColor(OutLine);

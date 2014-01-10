@@ -46,16 +46,14 @@ public class FreeStructure extends Structure {
         }
         
         // should moved down to be special for each kind of peice
-        Color color = new Color( (int)(Math.random() * 255.0f), 
-                             (int)(Math.random() * 255.0f), 
-                             (int)(Math.random() * 255.0f), 
-                             200);
+        Color color = Color.WHITE;
         
         // They will all be transposed, all my work!=/
         int[][] structure = new int[4][4];
         Type type = Type.values()[(int)(Math.random() * 5.999)];
         switch(type){
             case  O:
+                color = Color.YELLOW;
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {0, 1, 1, 0}, 
@@ -63,6 +61,7 @@ public class FreeStructure extends Structure {
                   {0, 0, 0, 0} };
                 break;
             case S: 
+                color = Color.GREEN;
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {0, 0, 1, 0}, 
@@ -70,6 +69,7 @@ public class FreeStructure extends Structure {
                   {0, 1, 0, 0} };
                 break;
             case Z:
+                color = Color.RED;
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {0, 1, 0, 0}, 
@@ -77,6 +77,7 @@ public class FreeStructure extends Structure {
                   {0, 0, 1, 0} };
                 break;
             case L:
+                color = new Color(255, 165, 0);
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {0, 0, 1, 0}, 
@@ -84,6 +85,7 @@ public class FreeStructure extends Structure {
                   {0, 0, 0, 0} };
                 break;
             case J:
+                color = Color.BLUE;
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {1, 1, 1, 0}, 
@@ -91,6 +93,7 @@ public class FreeStructure extends Structure {
                   {0, 0, 0, 0} };                
                 break;
             case I:
+                color = new Color(0, 255, 255);
                 structure = new int[][]
                 { {0, 0, 0, 0}, 
                   {1, 1, 1, 1}, 
@@ -117,7 +120,6 @@ public class FreeStructure extends Structure {
         return m_dead;
     }
       
-    
     void update(PlayerStructure player){
         move(m_move);
         
