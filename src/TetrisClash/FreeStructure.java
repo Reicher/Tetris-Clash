@@ -4,59 +4,44 @@
  */
 package TetrisClash;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.ArrayList;
 import org.jsfml.graphics.Color;
+import org.jsfml.graphics.RenderWindow;
+import org.jsfml.system.Vector2f;
+import org.jsfml.system.Vector2f;
 import org.jsfml.system.Vector2i;
 
 /**
  *
  * @author regen
  */
-public class BlockStructure {
-    public static List<Block> addPlayerStructure( List<Block> blocks,
-                                                int blockWidth){
-        Vector2i pos = new Vector2i(blockWidth/2-2, blockWidth/2-2);
-               
-        Color color = Color.RED;
-        
-        int[][] structure = new int[][]
-                { {0, 0, 0, 0}, 
-                  {0, 1, 1, 0}, 
-                  {0, 1, 1, 0}, 
-                  {0, 0, 0, 0} };
-        
-        for(int x = 0; x < 4; x++)
-            for(int y = 0; y < 4; y++)
-                if(structure[x][y] == 1)
-                    blocks.add(new Block( pos.x + x, 
-                                          pos.y +y, 
-                                          color, 
-                                          Block.Direction.Player));
 
-        return blocks;
-    }
+public class FreeStructure extends Structure {
+    public FreeStructure( int playAreaWidth){
+        super(Vector2i.ZERO);
     
-    public static List<Block> addRandomStructure( List<Block> blocks,
-                                            int blockWidth)
-    {
+        m_active = false;
+        m_dead = false;
+        
+        m_move = Vector2i.ZERO;
         Vector2i pos = Vector2i.ZERO;
-        Block.Direction dir = Block.Direction.values()[(int)(Math.random() * 3.9999)];
-        switch(dir){
+        m_direction = Direction.values()[(int)(Math.random() * 3.9999)];
+        switch(m_direction){
             case North:
-                pos = new Vector2i(blockWidth/2 - 2, blockWidth);
+                pos = new Vector2i(playAreaWidth/2 - 2, playAreaWidth);
+                m_move = new Vector2i(0, - 1 );
                 break;
             case East:
-                pos = new Vector2i(- 4, blockWidth/2 -2);
+                pos = new Vector2i(- 4, playAreaWidth/2 -2);
+                m_move = new Vector2i(1, 0 );
                 break;
             case South:
-                pos = new Vector2i(blockWidth/2 - 2, -4);
+                pos = new Vector2i(playAreaWidth/2 - 2, -4);
+                m_move = new Vector2i(0, 1 );
                 break;
             case West:
-                pos = new Vector2i(blockWidth, blockWidth/2 -2);
-                break;
-            case Player:
-                pos = new Vector2i(blockWidth/2, blockWidth/2);
+                pos = new Vector2i(playAreaWidth, playAreaWidth/2 -2);
+                m_move = new Vector2i(-1, 0 );                
                 break;
         }
         
@@ -116,29 +101,49 @@ public class BlockStructure {
         
         for(int x = 0; x < 4; x++)
             for(int y = 0; y < 4; y++)
-                if(structure[x][y] == 1){
-                    Block tmp = new Block(pos.x + x, pos.y + y, color, dir);
-                    tmp.setAsPartAsStruct(nextStructId);
-                    blocks.add(tmp);
-                }       
-        
-        nextStructId++;
-        return blocks;
+                if(structure[x][y] == 1)
+                    addToStructure(new Block(pos.x + x, pos.y + y, color));   
     }
     
-    public static List<Block> structBecamePlayer(List<Block> blocks, int structId){
-        for(Block struct: blocks){
-            if(struct.getStructId() == structId)
-                struct.setAsPartOfPlayer();
-        }
+    public void setActive(){
+        m_active = true;
+    }
+    
+    public void setDead(){
+        m_dead = true;
+    }
+    
+    public boolean isDead(){
+        return m_dead;
+    }
+      
+    
+    void update(PlayerStructure player){
+        move(m_move);
         
-        return blocks;
+        if( isCollidingWith(player)){   
+            move(Vector2i.mul(m_move, -1));
+            player.addToStructure(m_blocks);
+            m_dead = true; // remove the free moving block
+        }
+    }
+    
+    @Override
+    public void draw(RenderWindow window){
+        if(m_active)
+            super.draw(window);
     }
 
-    public enum Type{
+    private enum Type{
         O, S, Z, L, J, I;
     }
     
-    private static int nextStructId = 1;
-
+    private enum Direction{
+        North, East, South, West
+    }
+    
+    private boolean m_active;
+    private boolean m_dead;
+    private Direction m_direction;
+    private Vector2i m_move;
 }
