@@ -50,7 +50,8 @@ public class FreeStructure extends Structure {
         
         // They will all be transposed, all my work!=/
         int[][] structure = new int[4][4];
-        Type type = Type.values()[(int)(Math.random() * 5.999)];
+        //Type type = Type.values()[(int)(Math.random() * 5.999)];
+        Type type = Type.O; // FOR TESTING
         switch(type){
             case  O:
                 color = Color.YELLOW;

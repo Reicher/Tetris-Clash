@@ -22,7 +22,7 @@ public class PlayArea {
         Block.Size = screenSize.y / m_playAreaWidth;      
         int cornerSize = m_playAreaWidth/2 - 3;
         
-        m_center = new Vector2i(m_playAreaWidth / 2, m_playAreaWidth / 2);
+        m_center = new Vector2i(m_playAreaWidth / 2 - 1, m_playAreaWidth / 2 -1);
         
         m_wallBlocks = new Structure(Vector2i.ZERO);
         m_playerStruct = new PlayerStructure(m_center);
@@ -48,6 +48,9 @@ public class PlayArea {
         
         m_timeSinceMove = 0.0f;
         m_moveFrequency = 0.1f;
+        
+        // Add starting enemy
+        m_enemies.add(new FreeStructure(m_playAreaWidth));
     }
     
     public void update(float dt){

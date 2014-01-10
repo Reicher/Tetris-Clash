@@ -14,6 +14,7 @@ import org.jsfml.system.Vector2i;
  */
 public class Structure {
     public Structure(Vector2i pos){
+        m_gridPos = pos;
         m_blocks = new ArrayList<Block>();
     }
     
@@ -31,6 +32,7 @@ public class Structure {
     }
     
     protected void move(Vector2i v){
+        m_gridPos = Vector2i.add(m_gridPos, v);
         for(Block block : m_blocks)
             block.move(v);
     }

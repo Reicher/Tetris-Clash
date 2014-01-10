@@ -38,12 +38,8 @@ public class Block {
         m_shape = new RectangleShape(new Vector2f(Size, Size));
         m_shape.setPosition(Vector2f.mul(new Vector2f(m_gridPos.x, m_gridPos.y), Size));
         m_shape.setOutlineThickness(-Size/10.0f);
-
-        Color OutLine = Color.BLACK;
-        
         m_shape.setFillColor(m_color);
-        m_shape.setOutlineColor(OutLine);
-        
+        m_shape.setOutlineColor(Color.BLACK);
     }
     
     public void move(Vector2i v){
