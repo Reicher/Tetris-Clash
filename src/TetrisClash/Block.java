@@ -55,7 +55,7 @@ public class Block {
         m_shape.setPosition(pos);
     }
     
-    public Vector2i getGridPosition(){
+    public Vector2i getPosition(){
         return m_gridPos;
     }
 

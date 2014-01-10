@@ -18,11 +18,11 @@ import org.jsfml.window.event.KeyEvent;
 public class PlayArea {
     public PlayArea(Vector2i screenSize){
 
-        m_playAreaWidth = 26; // even number looks nicest.
+        m_playAreaWidth = 30; // even number looks nicest.
         Block.Size = screenSize.y / m_playAreaWidth;      
         int cornerSize = m_playAreaWidth/2 - 3;
         
-        m_center = new Vector2i(m_playAreaWidth / 2 - 1, m_playAreaWidth / 2 -1);
+        m_center = new Vector2i(m_playAreaWidth / 2 , m_playAreaWidth / 2);
         
         m_wallBlocks = new Structure(Vector2i.ZERO);
         m_playerStruct = new PlayerStructure(m_center);

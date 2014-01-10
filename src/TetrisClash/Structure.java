@@ -44,7 +44,7 @@ public class Structure {
     protected boolean isCollidingWith(ArrayList<Block> structure){
         for(Block block : m_blocks){
             for(Block other : structure){
-                if(block.getGridPosition().equals(other.getGridPosition()))
+                if(block.getPosition().equals(other.getPosition()))
                     return true;
             }
         }

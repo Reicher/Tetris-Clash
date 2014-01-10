@@ -15,13 +15,13 @@ import org.jsfml.window.event.KeyEvent;
  */
 public class PlayerStructure extends Structure{
     public PlayerStructure(Vector2i pos){
-        super(pos);
+        super(Vector2i.sub(pos, new Vector2i(2, 2)));
         
         m_playerMove = Vector2i.ZERO;
-        m_size = 3;
+        m_size = 4; // ALWAYS
         m_core = new ArrayList<Block>();
-        for(int x = pos.x; x < pos.x + m_size; x++)
-            for(int y = pos.y; y < pos.y+m_size; y++)
+        for(int x = m_gridPos.x; x < m_gridPos.x + m_size; x++)
+            for(int y = m_gridPos.y; y < m_gridPos.y+m_size; y++)
                 m_core.add(new Block(x, y, Color.WHITE));
         this.addToStructure(m_core);
     }
@@ -60,7 +60,7 @@ public class PlayerStructure extends Structure{
         
         // check if we have a frame around our starting block
         if(isHavingAFrame()){
-            Collapse();
+            //Collapse();
             // "merge" douubles
             // update multiplier score
             // check again for frame, if have! multiplier+1 and redo
@@ -70,7 +70,7 @@ public class PlayerStructure extends Structure{
     private void Collapse(){
         for(Block block: m_blocks)
         {
-            Vector2i pos = block.getGridPosition();
+            Vector2i pos = block.getPosition();
             
             // right
             if(pos.x > m_gridPos.x + m_size - 1){
@@ -94,24 +94,42 @@ public class PlayerStructure extends Structure{
     // Returns true if there is a frame, also removes it.
     private boolean isHavingAFrame(){
         // a bit....cumbersome, like...tripple nested..RLY?
-        ArrayList<Block> frame = new ArrayList<Block>();
-        for(int x = m_gridPos.x - 1; x < m_gridPos.x + m_size+1 ; x++){
-            for(int y = m_gridPos.y - 1; y < m_gridPos.y + m_size+1 ; y++){                
-                for(Block block : m_blocks){
-                    if(block.getGridPosition().x == x 
-                            && block.getGridPosition().y == y){
-                        frame.add(block);
-                        break;
-                    }
-                }
-            }
-        }
-        frame.removeAll(m_core);
-        if(frame.size() < (m_size*4 + 4))
-            return false;
         
-        m_blocks.removeAll(frame);
-        return true;
+        ArrayList<Block> frame = new ArrayList<Block>();
+        ArrayList<Block> insideFrame = new ArrayList<Block>();
+        insideFrame.addAll(m_core);
+        int level = 0;
+        
+        boolean frameFound = false;
+        
+        do{
+            level++;    
+            frame.clear();
+            // Add all blocks in and inside the fram.
+            for(int x = m_gridPos.x-level; x < m_gridPos.x + m_size +level; x++)
+                for(int y = m_gridPos.y-level; y < m_gridPos.y + m_size +level; y++)
+                    for(Block block : m_blocks)
+                        if(block.getPosition().x == x && block.getPosition().y == y)
+                            frame.add(block);
+            
+            // remove all blocks inside the frame
+            frame.removeAll(insideFrame);
+            
+            // Check if frame is "full"
+            int FrameCount = m_size *(4 + (int)Math.pow(level, 2));
+            if(frame.size() == FrameCount){
+                frameFound = true;
+                System.out.println("Found frame!");
+                // Remove the frame
+                m_blocks.removeAll(frame);
+                // ADD POINTS AND MULTIPLIER
+            }
+            else // there COULD be a frame outside this unfinished one
+                insideFrame.addAll(frame);
+            
+        }while(!frame.isEmpty()); // The edge of the player structure is reached
+        
+        return frameFound;
     }
 
     public void keyPressed(KeyEvent event){
@@ -137,5 +155,5 @@ public class PlayerStructure extends Structure{
     
     private Vector2i m_playerMove;
     ArrayList<Block> m_core;
-    private int m_size;
+    private final int m_size;
 }
