@@ -18,11 +18,12 @@ public class PlayerStructure extends Structure{
         super(pos);
         
         m_playerMove = Vector2i.ZERO;
-        
         m_size = 3;
+        m_core = new ArrayList<Block>();
         for(int x = pos.x; x < pos.x + m_size; x++)
             for(int y = pos.y; y < pos.y+m_size; y++)
-                this.addToStructure(new Block(x, y, Color.WHITE));
+                m_core.add(new Block(x, y, Color.WHITE));
+        this.addToStructure(m_core);
     }
     
     public void update(Structure walls, ArrayList<FreeStructure> enemies){
@@ -59,30 +60,57 @@ public class PlayerStructure extends Structure{
         
         // check if we have a frame around our starting block
         if(isHavingAFrame()){
-            // Remove blocks in frame
-            // move all in
+            Collapse();
             // "merge" douubles
             // update multiplier score
             // check again for frame, if have! multiplier+1 and redo
         }
     }
     
+    private void Collapse(){
+        for(Block block: m_blocks)
+        {
+            Vector2i pos = block.getGridPosition();
+            
+            // right
+            if(pos.x > m_gridPos.x + m_size - 1){
+                block.move(new Vector2i(-1, 0));
+            }
+            // Left
+            else if(pos.x < m_gridPos.x){
+                block.move(new Vector2i(1, 0));
+            }
+            // Under
+            else if(pos.y > m_gridPos.y + m_size){
+                block.move(new Vector2i(0, -1));
+            }
+            // Above
+            else if(pos.y < m_gridPos.y){
+                block.move(new Vector2i(0, 1));
+            }
+        }
+    }
+    
+    // Returns true if there is a frame, also removes it.
     private boolean isHavingAFrame(){
         // a bit....cumbersome, like...tripple nested..RLY?
+        ArrayList<Block> frame = new ArrayList<Block>();
         for(int x = m_gridPos.x - 1; x < m_gridPos.x + m_size+1 ; x++){
-            for(int y = m_gridPos.y - 1; y < m_gridPos.y + m_size+1 ; y++){
-                boolean haveBlock = false;
+            for(int y = m_gridPos.y - 1; y < m_gridPos.y + m_size+1 ; y++){                
                 for(Block block : m_blocks){
                     if(block.getGridPosition().x == x 
                             && block.getGridPosition().y == y){
-                        haveBlock = true;
+                        frame.add(block);
+                        break;
                     }
                 }
-                if(!haveBlock)
-                    return false;
             }
         }
+        frame.removeAll(m_core);
+        if(frame.size() < (m_size*4 + 4))
+            return false;
         
+        m_blocks.removeAll(frame);
         return true;
     }
 
@@ -108,5 +136,6 @@ public class PlayerStructure extends Structure{
     }
     
     private Vector2i m_playerMove;
+    ArrayList<Block> m_core;
     private int m_size;
 }
