@@ -58,7 +58,7 @@ public class Block {
     public Vector2i getPosition(){
         return m_gridPos;
     }
-
+    
 
     private Vector2i m_gridPos;
     private RectangleShape m_shape;

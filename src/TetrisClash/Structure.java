@@ -55,6 +55,21 @@ public class Structure {
         return m_blocks;
     }
     
+    protected void RemoveDuplicates(){
+        ArrayList<Block> duplicateFree = new ArrayList<Block>();
+        for(Block block : m_blocks){
+            boolean Special = true;
+            for(Block unique : duplicateFree){
+                if(block.getPosition().equals(unique.getPosition()))
+                    Special = false;
+            }
+            if(Special)
+                duplicateFree.add(block);
+        }
+        m_blocks.clear();
+        m_blocks.addAll(duplicateFree);
+    }
+    
     protected ArrayList<Block> m_blocks;
     protected Vector2i m_gridPos; // upper left corner of struct
 }
