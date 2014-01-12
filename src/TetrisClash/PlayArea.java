@@ -18,7 +18,7 @@ import org.jsfml.window.event.KeyEvent;
 public class PlayArea {
     public PlayArea(Vector2i screenSize){
 
-        m_playAreaWidth = 30; // even number looks nicest.
+        m_playAreaWidth = 40; // even number looks nicest.
         Block.Size = screenSize.y / m_playAreaWidth;      
         int cornerSize = m_playAreaWidth/2 - 3;
         
@@ -70,15 +70,19 @@ public class PlayArea {
          // If player have moved (and not to fast)
         if(m_timeSinceMove >= m_moveFrequency){
             m_playerStruct.update(m_wallBlocks, m_enemies);
+            //m_playerStruct.animate(dt);
             m_timeSinceMove = 0.0f;
         }
         
         // only update if a "tick" has passed
-        else if(m_timeSinceTick >= m_tickFrequency){
-            for(FreeStructure enemy : m_enemies)
+
+        for(FreeStructure enemy : m_enemies){
+            if(m_timeSinceTick >= m_tickFrequency){
                 enemy.update(m_playerStruct);
-                
-            m_timeSinceTick = 0.0f;
+                m_timeSinceTick = 0.0f;
+            }
+
+            enemy.animate(dt);  
         }
         
         // Remove dead
@@ -113,11 +117,11 @@ public class PlayArea {
     
     // TIME
     private float m_timeSinceTick;
-    private float m_tickFrequency;
+    public static float m_tickFrequency;
     
     private float m_timeSinceBlock;
-    private float m_blockFrequency;
+    public static float m_blockFrequency;
 
     private float m_timeSinceMove;
-    private float m_moveFrequency;
+    public static float m_moveFrequency;
 }

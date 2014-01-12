@@ -60,14 +60,23 @@ public class Structure {
         for(Block block : m_blocks){
             boolean Special = true;
             for(Block unique : duplicateFree){
-                if(block.getPosition().equals(unique.getPosition()))
+                if(block.getPosition().equals(unique.getPosition())){
                     Special = false;
+                    unique.mergeColor(block.getColor());
+                    break;
+                }
+                    
             }
             if(Special)
                 duplicateFree.add(block);
         }
         m_blocks.clear();
         m_blocks.addAll(duplicateFree);
+    }
+    
+    public void animate(float dt){
+        for(Block block : m_blocks)
+            block.animate(dt);
     }
     
     protected ArrayList<Block> m_blocks;

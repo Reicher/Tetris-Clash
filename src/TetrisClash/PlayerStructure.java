@@ -56,17 +56,49 @@ public class PlayerStructure extends Structure{
     @Override
     public void addToStructure(ArrayList<Block> blocks){
         super.addToStructure(blocks);
+
+        // a bit....cumbersome, like...tripple nested..RLY?
+        ArrayList<Block> frame = new ArrayList<Block>();
+        ArrayList<Block> insideFrame =  new ArrayList<Block>();
+        insideFrame.addAll(m_core);
+        int level = 0;
         
-        // Check if any block is outside
-        // ToDo!!
-        
-        // check if we have a frame around our starting block
-        if(isHavingAFrame()){
-            //Collapse();
-            // "merge" douubles
-            // update multiplier score
-            // check again for frame, if have! multiplier+1 and redo
-        }
+        do{
+            level++;    
+            frame.clear();
+            // Add all blocks in and inside the fram.
+            for(int x = m_gridPos.x-level; x < m_gridPos.x + m_size +level; x++)
+                for(int y = m_gridPos.y-level; y < m_gridPos.y + m_size +level; y++)
+                    for(Block block : m_blocks)
+                        if(block.getPosition().x == x && block.getPosition().y == y)
+                            frame.add(block);
+            
+            // remove all blocks inside the frame
+            frame.removeAll(insideFrame);
+            
+            // Check if frame is "full"
+            int FrameCount = m_size *(4 + (int)Math.pow(level, 2));
+            if(frame.size() == FrameCount){
+                // Remove the frame
+                m_blocks.removeAll(frame);
+                
+                // ADD POINTS AND MULTIPLIER
+                
+                // collapse all outside
+                ArrayList<Block> tmp =  new ArrayList<Block>();
+                tmp.addAll(m_blocks);
+                tmp.removeAll(insideFrame);
+                collapse(tmp);
+                
+                // Remove duplicates
+                RemoveDuplicates();
+                level = 0;
+            }
+            else // there COULD be a frame outside this unfinished one
+                insideFrame.addAll(frame);
+            
+        }while(!frame.isEmpty()); // The edge of the player structure is reached
+ 
     }
     
     public Vector2i getClosestCorePos(Vector2i pos){
@@ -106,58 +138,6 @@ public class PlayerStructure extends Structure{
            
             block.move(move);
         }
-    }
-    
-
-   
-    // Returns true if there is a frame, also removes it.
-    private boolean isHavingAFrame(){
-        // a bit....cumbersome, like...tripple nested..RLY?
-        
-        ArrayList<Block> frame = new ArrayList<Block>();
-        ArrayList<Block> insideFrame =  new ArrayList<Block>();
-        insideFrame.addAll(m_core);
-        int level = 0;
-        
-        boolean frameFound = false;
-        
-        do{
-            level++;    
-            frame.clear();
-            // Add all blocks in and inside the fram.
-            for(int x = m_gridPos.x-level; x < m_gridPos.x + m_size +level; x++)
-                for(int y = m_gridPos.y-level; y < m_gridPos.y + m_size +level; y++)
-                    for(Block block : m_blocks)
-                        if(block.getPosition().x == x && block.getPosition().y == y)
-                            frame.add(block);
-            
-            // remove all blocks inside the frame
-            frame.removeAll(insideFrame);
-            
-            // Check if frame is "full"
-            int FrameCount = m_size *(4 + (int)Math.pow(level, 2));
-            if(frame.size() == FrameCount){
-                frameFound = true;
-                // Remove the frame
-                m_blocks.removeAll(frame);
-                // ADD POINTS AND MULTIPLIER
-                
-                // collapse all outside
-                ArrayList<Block> tmp =  new ArrayList<Block>();
-                tmp.addAll(m_blocks);
-                tmp.removeAll(insideFrame);
-                collapse(tmp);
-                
-                // Remove duplicates
-                RemoveDuplicates();
-                level = 0;
-            }
-            else // there COULD be a frame outside this unfinished one
-                insideFrame.addAll(frame);
-            
-        }while(!frame.isEmpty()); // The edge of the player structure is reached
-        
-        return frameFound;
     }
 
     public void keyPressed(KeyEvent event){
