@@ -36,7 +36,7 @@ public class FreeStructure extends Structure {
                 m_move = new Vector2i(1, 0 );
                 break;
             case South:
-                pos = new Vector2i(playAreaWidth/2 - 2, -4);
+                pos = new Vector2i(playAreaWidth/2 - 2, -6);
                 m_move = new Vector2i(0, 1 );
                 break;
             case West:

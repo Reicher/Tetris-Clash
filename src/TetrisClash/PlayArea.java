@@ -41,10 +41,10 @@ public class PlayArea {
         
         //Time
         m_timeSinceTick = 0.0f;
-        m_tickFrequency = 0.75f;
+        m_tickFrequency = 0.5f;
         
         m_timeSinceBlock = 0.0f;
-        m_blockFrequency = 4.0f;
+        m_blockFrequency = 2.5f;
         
         m_timeSinceMove = 0.0f;
         m_moveFrequency = 0.1f;
